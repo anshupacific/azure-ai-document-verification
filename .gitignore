@@ -1,0 +1,25 @@
+# Azure Functions
+local.settings.json
+.python_packages/
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets / env
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+tests/fixtures/eval_results.json

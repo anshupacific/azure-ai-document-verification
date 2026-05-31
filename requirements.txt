@@ -1,0 +1,5 @@
+azure-functions
+openai>=1.0.0
+azure-ai-documentintelligence
+azure-storage-blob
+azure-data-tables
