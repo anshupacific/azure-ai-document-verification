@@ -17,13 +17,13 @@ data.
 
 The pipeline runs in stages:
 
-1. **Stage 1 — Classify** (GPT-4o Vision via Azure AI Foundry): identifies the
+1. **Stage 1 — Classify** (GPT-4o via Azure AI Foundry): identifies the
    document type and judges whether the image is acceptable (not blurry, cropped,
    a screenshot, expired, or tampered). No data extraction.
 2. **Document Intelligence — Extract** (`prebuilt-idDocument`): for acceptable,
    known ID types, extracts structured fields with per-field confidence and
    applies a confidence gate.
-3. **Stage 2 — Fraud check** (GPT-4o Vision, flag-only by default): a tamper
+3. **Stage 2 — Fraud check** (GPT-4o, flag-only by default): a tamper
    review. Disabled from auto-verifying by default — it only flags for human
    review.
 
@@ -37,10 +37,10 @@ behind an additional admin key).
 
 | Resource | Purpose |
 | --- | --- |
-| **Azure AI Foundry — GPT-4o (Vision) deployment** | Powers Stage 1 classification (document type + image quality) and the Stage 2 fraud/tamper check. Accessed through a Foundry-managed OpenAI endpoint. |
+| **Azure AI Foundry — GPT-4o deployment** | Powers Stage 1 classification (document type + image quality) and the Stage 2 fraud/tamper check. Accessed through a Foundry-managed OpenAI endpoint. |
 | **Azure AI Document Intelligence** (`prebuilt-idDocument`) | Reads the document contents — extracts structured fields (name, document number, date of birth, expiry, etc.) with per-field confidence scores. This is the only stage that actually pulls data out of the document. |
 | **Azure Function App** (Python, v4 runtime) | Hosts the API. Exposes the `verify`, `status`, and `review` HTTP endpoints, orchestrates the pipeline, and applies the routing logic. Key-based auth. |
-| **Azure Storage Account** | Serves three roles on one account: **Blob storage** holds the uploaded document images (and the API generates short-lived read SAS URLs for the vision calls); **Table storage** holds the PII-free status records and the PII-bearing admin review records; and it backs the **Functions runtime** itself. |
+| **Azure Storage Account** | Serves three roles on one account: **Blob storage** holds the uploaded document images (and the API generates short-lived read SAS URLs for the calls); **Table storage** holds the PII-free status records and the PII-bearing admin review records; and it backs the **Functions runtime** itself. |
 | **Application Insights** | Captures the metadata-only audit logs (stage, document type, verdict, confidences, latency) emitted by the app. No prompts, responses, or field values are logged. |
 
 All AI and data resources should sit in the same region for data residency, and
@@ -202,7 +202,7 @@ Azure portal (not in the deployment package).
 - **Confidence and correctness are decoupled.** Synthetic / specimen documents
   often extract correctly but with low confidence, so they may route to
   ManualReview under the default `0.90` gate. Tune the gate for your document mix.
-- **Stage 2 is flag-only by default.** General-purpose vision models are not
+- **Stage 2 is flag-only by default.** General-purpose models are not
   reliable forgery detectors; auto-verify is off unless explicitly enabled.
 - This project handles sensitive identity documents. Configure encryption,
   retention, network access, and region on the storage account deliberately.
