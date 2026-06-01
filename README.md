@@ -1,4 +1,4 @@
-# NIJC Document Verification API
+# Document Verification API
 
 An Azure Functions (Python v4 / v2 programming model) backend that classifies and
 verifies identity documents uploaded during legal-services intake. Built for an
@@ -128,7 +128,7 @@ curl "https://<your-app>.azurewebsites.net/api/documents/doc_test_001/review?cod
 ## Project structure
 
 ```
-nijc-document-api/
+document-api/
 ├── function_app.py                 # Route registration (v2 model)
 ├── host.json
 ├── requirements.txt
